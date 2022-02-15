@@ -44,11 +44,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private static final String TAG = "MainActivity";
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
-    private  Sensor sensors;
+    private Sensor sensors;
 
     private LineChart mChart;
     private Thread thread;
     private boolean plotData = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
