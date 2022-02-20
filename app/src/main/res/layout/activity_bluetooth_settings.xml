@@ -75,6 +75,7 @@
             android:id="@+id/ListView"
             android:layout_gravity="center_vertical"
             android:layout_width="match_parent"
+            android:divider="@null"
             android:layout_height="400dp">
         </ListView>
         <LinearLayout

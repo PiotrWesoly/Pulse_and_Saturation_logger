@@ -10,56 +10,39 @@
     android:keepScreenOn="true">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="380dp"
-        android:layout_height="175dp"
-        app:cardCornerRadius="20dp"
-        android:layout_margin="20dp">
+        android:id="@+id/start"
+        android:layout_width="300dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="80dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="50dp"
+        app:cardBackgroundColor="#E35656"
+        app:cardCornerRadius="20dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="0dp">
+            android:layout_height="131dp">
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginHorizontal="100dp"
                 android:layout_marginTop="0dp"
-                android:src="@drawable/health_monitor_icon"
-                android:scaleType="centerInside"
-                />
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="0dp"
-                android:layout_marginBottom="0dp"
-                android:alpha="0.8"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/grad" />
+                android:src="@drawable/watch_icon2" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="120dp"
-                android:layout_marginBottom="0dp"
+                android:id="@+id/startText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="65dp"
+                android:text="Start "
                 android:fontFamily="serif"
-                android:text="Pulse and Saturation logger"
-                android:textColor="@color/white"
-                android:textSize="27dp" />
-
-            <ImageView
-                android:layout_width="300dp"
-                android:layout_height="4dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="160dp"
-                app:srcCompat="@drawable/gradient_line" />
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="40dp" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
@@ -104,7 +87,7 @@
                     android:fontFamily="serif"
                     android:textColor="@color/black"
                     android:textSize="30dp"
-                    android:text="23 bpm"/>
+                    android:text="0 bpm"/>
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
@@ -145,10 +128,9 @@
                     android:fontFamily="serif"
                     android:textColor="@color/black"
                     android:textSize="30dp"
-                    android:text="23 %"/>
+                    android:text="0 %"/>
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
-
     </LinearLayout>
 
     <LinearLayout
@@ -183,6 +165,7 @@
                     android:layout_marginLeft="60dp"
                     android:layout_marginTop="30dp"
                     android:textAlignment="center"
+                    android:fontFamily="serif"
                     android:textColor="@color/black"
                     android:textSize="25dp"
                     android:text="History"/>
@@ -216,6 +199,7 @@
                     android:layout_marginTop="30dp"
                     android:textAlignment="center"
                     android:textColor="@color/black"
+                    android:fontFamily="serif"
                     android:textSize="25dp"
                     android:text="Graphs"/>
             </RelativeLayout>

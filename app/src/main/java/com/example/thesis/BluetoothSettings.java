@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +37,7 @@ public class BluetoothSettings extends AppCompatActivity {
     private CardView search;
     private CardView connect;
     private ListView listView;
+    private ImageView imageView;
     private BluetoothAdapter mBTAdapter;
     private static final int BT_ENABLE_REQUEST = 10; // This is the code we use for BT Enable
     private static final int SETTINGS = 20;
@@ -255,6 +258,7 @@ public class BluetoothSettings extends AppCompatActivity {
 
         private class ViewHolder {
             TextView tv;
+            ImageView iv;
         }
 
         public void replaceItems(List<BluetoothDevice> list) {
@@ -275,6 +279,7 @@ public class BluetoothSettings extends AppCompatActivity {
                 holder = new ViewHolder();
 
                 holder.tv = vi.findViewById(R.id.lstContent);
+                holder.iv = vi.findViewById(R.id.back);
 
                 vi.setTag(holder);
             } else {
@@ -282,12 +287,15 @@ public class BluetoothSettings extends AppCompatActivity {
             }
 
             if (selectedIndex != -1 && position == selectedIndex) {
+                holder.iv.setBackgroundColor(selectedColor);
                 holder.tv.setBackgroundColor(selectedColor);
             } else {
-                holder.tv.setBackgroundColor(Color.WHITE);
+                holder.tv.setBackgroundColor(Color.parseColor("#F3D4B4"));
+                holder.iv.setBackgroundColor(Color.parseColor("#F3D4B4"));
             }
             BluetoothDevice device = myList.get(position);
-            holder.tv.setText(device.getName() + "\n " + device.getAddress());
+            holder.tv.setText(device.getName());
+            holder.tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
             return vi;
         }

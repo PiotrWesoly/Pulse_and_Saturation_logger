@@ -2,9 +2,11 @@ package com.example.thesis;
 
 import android.util.Log;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class Reading {
 
@@ -18,7 +20,8 @@ public class Reading {
         this.heartRate = hr;
         this.spO2 = spO2;
         this.sampleMilis = sampleMilis;
-        this.readingDateTime = convertReadingTime(sampleMilis);
+        convertReadingTime(sampleMilis);
+//        this.readingDateTime = convertReadingTime(sampleMilis);
     }
 
     public int getHeartRate() {
@@ -53,17 +56,31 @@ public class Reading {
         this.readingDateTime = readingDateTime;
     }
 
-    public Date convertReadingTime(int sampleMilis) {
+    public void convertReadingTime(int sampleMilis) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Date dateTime = Calendar.getInstance().getTime();
-        Date currentDateTime = Calendar.getInstance().getTime();
-        Date recordDate = new Date(sampleMilis);
-        String currentString = formatter.format(currentDateTime);
-        String recordString = formatter.format(recordDate);
-        Log.d("Reading", "Current: " + currentString);
-        Log.d("Reading", "Record: " + recordString);
+        long time= System.currentTimeMillis();
+        long y, x;
+        long year, month, day, hours, minutes, seconds;
 
+        y=time - sampleMilis;
 
-        return dateTime;
+//        y = sampleMilis/1000;
+
+        x=(long)y/1000;
+        seconds = x%60;
+        x/=60;
+        minutes = x%60;
+        x/=60;
+        hours=x%24;
+        x/=24;
+        day=(x+5*(x/30/12)+(x/30/12/4))%30;
+        x/=30;
+        month=x%12;
+        x/=12;
+        year=x+1970;
+
+//        Log.d("Reading", "Record: " + recordString);
+
+//        return 0;
     }
 }

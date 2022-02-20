@@ -20,7 +20,10 @@ import androidx.cardview.widget.CardView;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,14 +37,18 @@ public class MainScreen extends Activity {
     private boolean mIsBluetoothConnected = false;
     private BluetoothDevice mDevice;
 
+    private static final byte CURRENT_READING_MSG = 1;
+    private static final byte HISTORY_MSG = 2;
+
     public static List<Reading> readingsBuffer = new ArrayList<>();
     Reading object;
 
-    CardView history, graphs;
+    CardView history, graphs, startBtn;
     private ProgressDialog progressDialog;
-    TextView mTextView, mTextView1;
-    public String strInput, strInput2;
-    public String x;
+    TextView mTextView, mTextView1, startText;
+    public String strInput, strInput2, x;
+    public static boolean start = false;
+    int type =0;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -53,14 +60,20 @@ public class MainScreen extends Activity {
         ActivityHelper.initialize(this);
         mTextView = findViewById(R.id.bpm);
         mTextView1 = findViewById(R.id.spo2);
+        startText = findViewById(R.id.startText);
         history = (CardView) findViewById(R.id.history);
         graphs = (CardView) findViewById(R.id.graph);
+        startBtn = (CardView) findViewById(R.id.start);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         mDevice = b.getParcelable(BluetoothSettings.DEVICE_EXTRA);
         mDeviceUUID = UUID.fromString(b.getString(BluetoothSettings.DEVICE_UUID));
         mMaxChars = b.getInt(BluetoothSettings.BUFFER_SIZE);
+
+        if(start == false){
+            startText.setText("Start");
+        }else startText.setText("Stop");
 
         history.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +88,23 @@ public class MainScreen extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainScreen.this, History.class);
                 startActivity(intent);
+            }
+        });
+
+        startBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(start == false){
+                    startText.setText("Start");
+                }else startText.setText("Stop");
+                start = true;
+                String text = "1";
+                try {
+                    mBTSocket.getOutputStream().write(text.getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
 
@@ -105,10 +135,10 @@ public class MainScreen extends Activity {
                     if (inputStream.available() > 0) {
                         inputStream.read(buffer);
                         int i = 0;
-                        for (i = 0; i < buffer.length && buffer[i] != 0; i=i+6) {
-                            object = new Reading(Byte.toUnsignedInt(buffer[i]), Byte.toUnsignedInt(buffer[i+1]), (((0xFF & buffer[i+2]) << 24) | ((0xFF & buffer[i+3]) << 16) |
-                                    ((0xFF & buffer[i+4]) << 8) | (0xFF & buffer[i+5])));
+                        for (i = 0; i < buffer.length && buffer[i] != 0; i=i+7) {
+                            object = new Reading(Byte.toUnsignedInt(buffer[i]), Byte.toUnsignedInt(buffer[i+1]), (((0xFF & buffer[i+2]) << 24) | ((0xFF & buffer[i+3]) << 16) | ((0xFF & buffer[i+4]) << 8) | (0xFF & buffer[i+5])));
                             readingsBuffer.add(object);
+                            type = buffer[i+6];
                         }
                         strInput = new String(String.valueOf(Byte.toUnsignedInt(buffer[0]))+" bpm");
                         strInput2 = new String(String.valueOf(Byte.toUnsignedInt(buffer[1]))+" %");
@@ -118,22 +148,18 @@ public class MainScreen extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mTextView.setText(strInput);
-                                mTextView1.setText(strInput2);
-//                                for(int i=0; i<readingsBuffer.size(); i++)
-//                                {
-//                                    Log.d(TAG, "run: i= "+String.valueOf(i) + "value=" + String.valueOf(readingsBuffer.get(i).getHeartRate()));
-//                                }
+                                if(type == CURRENT_READING_MSG) {
+                                    mTextView.setText(strInput);
+                                    mTextView1.setText(strInput2);
+                                }
                             }
                         });
                     }
                     Thread.sleep(500);
                 }
             } catch (IOException e) {
-// TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (InterruptedException e) {
-// TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -157,7 +183,6 @@ public class MainScreen extends Activity {
             try {
                 mBTSocket.close();
             } catch (IOException e) {
-// TODO Auto-generated catch block
                 e.printStackTrace();
             }
             return null;
@@ -241,7 +266,6 @@ public class MainScreen extends Activity {
     }
     @Override
     protected void onDestroy() {
-        // TODO Auto-generated method stub
         super.onDestroy();
     }
 }
