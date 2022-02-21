@@ -26,12 +26,13 @@ public class History extends AppCompatActivity {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
         timeList = (ListView) findViewById(R.id.timeList);
-        hrList = (ListView) findViewById(R.id.hrList);
-        spo2List = (ListView) findViewById(R.id.spo2List);
+//        hrList = (ListView) findViewById(R.id.hrList);
+//        spo2List = (ListView) findViewById(R.id.spo2List);
 
         ArrayList<String> time=new ArrayList<>();
         ArrayList<String> hr=new ArrayList<>();
         ArrayList<String> spo2=new ArrayList<>();
+        ArrayList<Reading> objects = new ArrayList<>();
 
 
         MainScreen object;
@@ -40,23 +41,26 @@ public class History extends AppCompatActivity {
         for(int i=0; i<object.readingsBuffer.size(); i++) {
             String timeStr;
 
+            objects.add(object.readingsBuffer.get(i));
+
             /* WORKS */
-            timeStr = formatter.format(object.readingsBuffer.get(i).getReadingDateTime());
-            hr.add(String.valueOf(object.readingsBuffer.get(i).getHeartRate()) + " bpm");
-            spo2.add(String.valueOf(object.readingsBuffer.get(i).getSpO2()) + "%");
-            time.add(timeStr);
+//            timeStr = formatter.format(object.readingsBuffer.get(i).getReadingDateTime());
+//            hr.add(String.valueOf(object.readingsBuffer.get(i).getHeartRate()) + " bpm");
+//            spo2.add(String.valueOf(object.readingsBuffer.get(i).getSpO2()) + "%");
+//            time.add(timeStr);
 
         }
 
-
+        CustomAdapter adapter = new CustomAdapter(this, objects);
         /* WORKS */
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, hr);
-        ArrayAdapter arrayAdapter1 = new ArrayAdapter(this, android.R.layout.simple_list_item_1, spo2);
-        ArrayAdapter arrayAdapter2 = new ArrayAdapter(this, android.R.layout.simple_list_item_1, time);
-
-        hrList.setAdapter(arrayAdapter);
-        spo2List.setAdapter(arrayAdapter1);
-        timeList.setAdapter(arrayAdapter2);
+//        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, hr);
+//        ArrayAdapter arrayAdapter1 = new ArrayAdapter(this, android.R.layout.simple_list_item_1, spo2);
+//        ArrayAdapter arrayAdapter2 = new ArrayAdapter(this, android.R.layout.simple_list_item_1, time);
+//
+        timeList.setAdapter(adapter);
+//        hrList.setAdapter(arrayAdapter);
+//        spo2List.setAdapter(arrayAdapter1);
+//        timeList.setAdapter(arrayAdapter2);
 
     }
 }

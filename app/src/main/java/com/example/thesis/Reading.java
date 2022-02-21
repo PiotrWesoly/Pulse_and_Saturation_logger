@@ -21,7 +21,7 @@ public class Reading {
         this.spO2 = spO2;
         this.sampleMilis = sampleMilis;
         convertReadingTime(sampleMilis);
-//        this.readingDateTime = convertReadingTime(sampleMilis);
+        this.readingDateTime = convertReadingTime(sampleMilis);
     }
 
     public int getHeartRate() {
@@ -56,9 +56,10 @@ public class Reading {
         this.readingDateTime = readingDateTime;
     }
 
-    public void convertReadingTime(int sampleMilis) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    public Date convertReadingTime(int sampleMilis) {
+
         long time= System.currentTimeMillis();
+        Date ret = new Date();
         long y, x;
         long year, month, day, hours, minutes, seconds;
 
@@ -79,8 +80,10 @@ public class Reading {
         x/=12;
         year=x+1970;
 
+        ret.setTime(y);
+
 //        Log.d("Reading", "Record: " + recordString);
 
-//        return 0;
+        return ret;
     }
 }

@@ -63,19 +63,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:divider="@null"
                         android:scrollbars="none"/>
-                    <ListView
-                        android:id="@+id/hrList"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:scrollbars="none"/>
-                    <ListView
-                        android:id="@+id/spo2List"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:scrollbars="none"/>
+<!--                    <ListView-->
+<!--                        android:id="@+id/hrList"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:scrollbars="none"/>-->
+<!--                    <ListView-->
+<!--                        android:id="@+id/spo2List"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:scrollbars="none"/>-->
                 </LinearLayout>
             </RelativeLayout>
 <!--        </androidx.core.widget.NestedScrollView>-->
