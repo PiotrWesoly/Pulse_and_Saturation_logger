@@ -95,16 +95,20 @@ public class MainScreen extends Activity {
             @Override
             public void onClick(View v) {
                 if(start == false){
+                    startText.setText("Stop");
+                    onResume();
+                    String text = "1";
+                    try {
+                        mBTSocket.getOutputStream().write(text.getBytes());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    start = true;
+                }else{
                     startText.setText("Start");
-                }else startText.setText("Stop");
-                start = true;
-                String text = "1";
-                try {
-                    mBTSocket.getOutputStream().write(text.getBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    onPause();
+                    start = false;
                 }
-
             }
         });
 
