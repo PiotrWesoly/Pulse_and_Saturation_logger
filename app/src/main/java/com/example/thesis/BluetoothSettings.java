@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,10 +35,10 @@ import java.util.UUID;
 
 
 public class BluetoothSettings extends AppCompatActivity {
-    private CardView search;
-    private CardView connect;
+    private CardView search, connect;
     private ListView listView;
     private ImageView imageView;
+    private Button test;
     private BluetoothAdapter mBTAdapter;
     private static final int BT_ENABLE_REQUEST = 10; // This is the code we use for BT Enable
     private static final int SETTINGS = 20;
@@ -49,6 +50,7 @@ public class BluetoothSettings extends AppCompatActivity {
     private static final String DEVICE_LIST_SELECTED = "com.example.lightcontrol.devicelistselected";
     public static final String BUFFER_SIZE = "com.example.lightcontrol.buffersize";
     private static final String TAG = "BlueTest5-MainActivity";
+    public static boolean isTest = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,16 @@ public class BluetoothSettings extends AppCompatActivity {
         search = (CardView)findViewById(R.id.search);
         connect = (CardView)findViewById(R.id.connect);
         listView = findViewById(R.id.ListView);
+        test = (Button) findViewById(R.id.test);
+
+        test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isTest = true;
+                Intent intent = new Intent(getApplicationContext(), MainScreen.class);
+                startActivity(intent);
+            }
+        });
 
         if (savedInstanceState != null) {
             ArrayList<BluetoothDevice> list = savedInstanceState.getParcelableArrayList(DEVICE_LIST);
@@ -290,8 +302,8 @@ public class BluetoothSettings extends AppCompatActivity {
                 holder.iv.setBackgroundColor(selectedColor);
                 holder.tv.setBackgroundColor(selectedColor);
             } else {
-                holder.tv.setBackgroundColor(Color.parseColor("#F3D4B4"));
-                holder.iv.setBackgroundColor(Color.parseColor("#F3D4B4"));
+                holder.tv.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                holder.iv.setBackgroundColor(Color.parseColor("#FFFFFF"));
             }
             BluetoothDevice device = myList.get(position);
             holder.tv.setText(device.getName());

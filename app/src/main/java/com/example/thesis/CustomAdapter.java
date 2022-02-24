@@ -14,7 +14,7 @@ import static java.security.AccessController.getContext;
 
 public class CustomAdapter extends ArrayAdapter<Reading> {
 
-    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM \nHH:mm:ss");
     Context mContext;
 
     public CustomAdapter(Context context, ArrayList<Reading> users) {

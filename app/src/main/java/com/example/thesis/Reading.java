@@ -14,6 +14,7 @@ public class Reading {
     private int spO2 = 0;
     private int sampleMilis = 0;
     private Date readingDateTime;
+    private long readingDateTimeMillis;
 
     Reading(int hr, int spO2, int sampleMilis)
     {
@@ -40,6 +41,10 @@ public class Reading {
         return readingDateTime;
     }
 
+    public long getReadingDateTimeMillis() {
+        return readingDateTimeMillis;
+    }
+
     public void setHeartRate(int heartRate) {
         this.heartRate = heartRate;
     }
@@ -56,33 +61,19 @@ public class Reading {
         this.readingDateTime = readingDateTime;
     }
 
+    public void setReadingDateTimeMillis(long readingDateTimeMillis) {
+        this.readingDateTimeMillis = readingDateTimeMillis;
+    }
+
     public Date convertReadingTime(int sampleMilis) {
 
         long time= System.currentTimeMillis();
         Date ret = new Date();
         long y, x;
-        long year, month, day, hours, minutes, seconds;
 
         y=time - sampleMilis;
-
-//        y = sampleMilis/1000;
-
-        x=(long)y/1000;
-        seconds = x%60;
-        x/=60;
-        minutes = x%60;
-        x/=60;
-        hours=x%24;
-        x/=24;
-        day=(x+5*(x/30/12)+(x/30/12/4))%30;
-        x/=30;
-        month=x%12;
-        x/=12;
-        year=x+1970;
-
         ret.setTime(y);
-
-//        Log.d("Reading", "Record: " + recordString);
+        setReadingDateTimeMillis(y);
 
         return ret;
     }

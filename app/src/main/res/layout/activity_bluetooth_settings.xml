@@ -6,27 +6,29 @@
     android:keepScreenOn="true"
     android:orientation="vertical"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="#FFF2E5"
     tools:context=".BluetoothSettings">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_width="430dp"
+        android:layout_height="220dp"
+        android:layout_marginLeft="-10dp">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/bluetooth"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            app:cardCornerRadius="20dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginHorizontal="20dp">
+            android:layout_height="250dp"
+            app:cardCornerRadius="60dp"
+            android:layout_marginTop="-50dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginHorizontal="-30dp"
+            app:cardBackgroundColor="@color/white"
+            android:layout_weight="1"
+            android:id="@+id/history">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="230dp"
+                android:layout_height="270dp"
                 android:layout_marginTop="0dp">
-
-
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -40,26 +42,28 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:background="#B6793C" />
+                    android:background="@color/white" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
+                    android:layout_marginTop="60dp"
                     android:textSize="30dp"
-                    android:fontFamily="monospace"
+                    android:fontFamily="serif"
                     android:text="WELCOME"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textAlignment="center"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_marginTop="50dp"
-                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="25dp"
+                    android:layout_marginTop="120dp"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="0dp"
-                    android:fontFamily="monospace"
+                    android:fontFamily="serif"
+                    android:textAlignment="center"
                     android:text='Click search to look for a new devices, then click on "Pulse and saturation logger" and then click connect'
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="20dp" />
 
             </RelativeLayout>
@@ -76,8 +80,16 @@
             android:layout_gravity="center_vertical"
             android:layout_width="match_parent"
             android:divider="@null"
-            android:layout_height="400dp">
+            android:layout_height="300dp">
         </ListView>
+        <Button
+            android:id="@+id/test"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:text="Test"/>
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="150dp"
@@ -108,7 +120,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:background="#B6793C" />
+                        android:background="@color/white" />
 
 
                     <TextView
@@ -116,17 +128,11 @@
                         android:layout_height="40dp"
                         android:textAlignment="center"
                         android:layout_marginVertical="30dp"
-                        android:fontFamily="monospace"
+                        android:fontFamily="serif"
                         android:text="Search"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="30dp" />
 
-                    <ImageView
-                        android:layout_width="250dp"
-                        android:layout_height="4dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="167dp"
-                        app:srcCompat="@drawable/gradient_line" />
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
@@ -156,7 +162,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:background="#B6793C" />
+                        android:background="@color/white" />
 
 
                     <TextView
@@ -164,31 +170,14 @@
                         android:layout_height="40dp"
                         android:textAlignment="center"
                         android:layout_marginVertical="30dp"
-                        android:fontFamily="monospace"
+                        android:fontFamily="serif"
                         android:text="Connect"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="30dp" />
 
-                    <ImageView
-                        android:layout_width="250dp"
-                        android:layout_height="4dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="167dp"
-                        app:srcCompat="@drawable/gradient_line" />
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
-
-
-        <!--            <Button-->
-        <!--                android:id="@+id/connect"-->
-        <!--                android:layout_width="200dp"-->
-        <!--                android:background="@drawable/rounded_button"-->
-        <!--                android:textColor="@color/black"-->
-        <!--                android:layout_height="match_parent"-->
-        <!--                android:layout_gravity="center_vertical"-->
-        <!--                android:text="Połącz"-->
-        <!--                android:textSize="14pt"></Button>-->
 
     </LinearLayout>
 </LinearLayout>

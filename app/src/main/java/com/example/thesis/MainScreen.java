@@ -50,6 +50,8 @@ public class MainScreen extends Activity {
     public static boolean start = false;
     int type =0;
 
+    BluetoothSettings testObject = new BluetoothSettings();
+
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +69,32 @@ public class MainScreen extends Activity {
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
-        mDevice = b.getParcelable(BluetoothSettings.DEVICE_EXTRA);
-        mDeviceUUID = UUID.fromString(b.getString(BluetoothSettings.DEVICE_UUID));
-        mMaxChars = b.getInt(BluetoothSettings.BUFFER_SIZE);
+        if(testObject.isTest == false) {
+            mDevice = b.getParcelable(BluetoothSettings.DEVICE_EXTRA);
+            mDeviceUUID = UUID.fromString(b.getString(BluetoothSettings.DEVICE_UUID));
+            mMaxChars = b.getInt(BluetoothSettings.BUFFER_SIZE);
+        }
+
+        /*******TEST*******/
+        if(testObject.isTest == true) {
+            Reading testObject = new Reading(70, 98, 120000);
+            readingsBuffer.add(testObject);
+            testObject = new Reading(78, 98, 17000);
+            readingsBuffer.add(testObject);
+            testObject = new Reading(85, 95, 17200);
+            readingsBuffer.add(testObject);
+            testObject = new Reading(70, 94, 17400);
+            readingsBuffer.add(testObject);
+            testObject = new Reading(90, 99, 17800);
+            readingsBuffer.add(testObject);
+            testObject = new Reading(86, 98, 18000);
+            readingsBuffer.add(testObject);
+
+            mTextView.setText("100 BPM");
+            mTextView1.setText("97%");
+        }
+
+        /*******************/
 
         if(start == false){
             startText.setText("Start");
@@ -215,6 +240,7 @@ public class MainScreen extends Activity {
     @Override
     protected void onResume() {
         if (mBTSocket == null || !mIsBluetoothConnected) {
+            if(testObject.isTest == false)
             new ConnectBT().execute();
         }
         Log.d(TAG, "Resumed");

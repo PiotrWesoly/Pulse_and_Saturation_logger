@@ -6,6 +6,10 @@
     android:gravity="center">
 
     <!-- Defining where should text be placed. You set you text color here -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
     <androidx.cardview.widget.CardView
         android:id="@+id/bluetooth"
         android:layout_width="match_parent"
@@ -39,7 +43,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:background="#F3D4B4" />
+                android:background="@color/white" />
 
             <TextView
                 android:id="@+id/lstContent"
@@ -51,11 +55,10 @@
                 android:textSize="20sp"
                 android:gravity="left"
                 android:padding="5dp"
-                android:textColor="#000000"
-                android:background="#F3D4B4"/>
+                android:textColor="@color/black"
+                android:background="@color/white"/>
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
-
-
+    </RelativeLayout>
 </LinearLayout>
