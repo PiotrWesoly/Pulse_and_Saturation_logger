@@ -34,7 +34,9 @@ public class History extends AppCompatActivity {
     public long millisFrom, millisTo;
     Calendar fromDate, toDate;
     int mYear, mMonth, mDay, mHour, mMinute;
-    ArrayList<Reading> objects = new ArrayList<>();
+    static ArrayList<Reading> objects = new ArrayList<>();
+    public static CustomAdapter adapter;
+    boolean isDatechanged = false, isTimechanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +75,10 @@ public class History extends AppCompatActivity {
         });
 
         for(int i=0; i<object.readingsBuffer.size(); i++) {
-            if(object.readingsBuffer.get(i).getReadingDateTimeMillis()>=millisFrom && object.readingsBuffer.get(i).getReadingDateTimeMillis()<= millisTo) {
-                objects.add(object.readingsBuffer.get(i));
-            }
+            objects.add(object.readingsBuffer.get(i));
         }
 
-        CustomAdapter adapter = new CustomAdapter(this, objects);
+        adapter = new CustomAdapter(this, objects);
         timeList.setAdapter(adapter);
 
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
@@ -95,7 +95,6 @@ public class History extends AppCompatActivity {
         String defaultDateYear, defaultDateMonth, defaultDateDay ;
         long time, date;
 
-
         final LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.activity_time, null);
 
         TimePicker timePicker = (TimePicker) linearLayout.findViewById(R.id.timePicker);
@@ -103,6 +102,18 @@ public class History extends AppCompatActivity {
 
         DatePicker datePicker = (DatePicker) linearLayout.findViewById(R.id.datePicker);
 
+        SimpleDateFormat formatterYear = new SimpleDateFormat("YYYY");
+        SimpleDateFormat formatterMonth = new SimpleDateFormat("MM");
+        SimpleDateFormat formatterDay = new SimpleDateFormat("dd");
+        SimpleDateFormat formatterHour = new SimpleDateFormat("hh");
+        SimpleDateFormat formatterMin = new SimpleDateFormat("mm");
+
+        if(objects.size()!=0) {
+            datePicker.updateDate(Integer.parseInt(formatterYear.format(objects.get(0).getReadingDateTime())), Integer.parseInt(formatterMonth.format(objects.get(0).getReadingDateTime())) - 1, Integer.parseInt(formatterDay.format(objects.get(0).getReadingDateTime())));
+            timePicker.setHour(Integer.parseInt(formatterHour.format(objects.get(0).getReadingDateTime())));
+            timePicker.setMinute(Integer.parseInt(formatterMin.format(objects.get(0).getReadingDateTime())));
+
+        }
         final AlertDialog builder = new AlertDialog.Builder(this)
                 .setView(linearLayout)
                 .setCancelable(false)
@@ -115,15 +126,8 @@ public class History extends AppCompatActivity {
 
                 mHour = hourOfDay;
                 mMinute = minute;
+                isTimechanged = true;
 
-                if (hourOfDay < 10 && minute < 10) {
-                    timeText.setText("0" + String.valueOf(hourOfDay) + ":" + "0" + String.valueOf(minute));
-                } else if (hourOfDay < 10) {
-                    timeText.setText("0" + String.valueOf(hourOfDay) + ":" + String.valueOf(minute));
-                } else if (minute < 10) {
-                    timeText.setText(String.valueOf(hourOfDay) + ":" + "0" + String.valueOf(minute));
-                } else
-                    timeText.setText(String.valueOf(hourOfDay) + ":" + String.valueOf(minute));
             }
 
         });
@@ -136,40 +140,39 @@ public class History extends AppCompatActivity {
                 mYear = year;
                 mMonth = monthOfYear;
                 mDay = dayOfMonth;
-                if(dayOfMonth<10 && monthOfYear<10){
-                    dateText.setText("0"+dayOfMonth+"-"+"0"+monthOfYear+"-"+year);
-                }
-                else if(dayOfMonth<10){
-                    dateText.setText("0"+dayOfMonth+"-"+monthOfYear+"-"+year);
-                }
-                else if(monthOfYear<10) {
-                    dateText.setText(dayOfMonth + "-" + "0" + monthOfYear + "-" + year);
-                }
-                else {
-                    dateText.setText(dayOfMonth + "-" + monthOfYear + "-" + year);
-                }
+                isDatechanged = true;
             }
         });
-
-        if(button == dateFrom) {
-            fromDate.set(mYear, mMonth, mDay, mHour, mMinute);
-            millisFrom = fromDate.getTimeInMillis();
-        }else{
-            toDate.set(mYear, mMonth, mDay, mHour, mMinute);
-            millisTo = toDate.getTimeInMillis();
-        }
-
-        for(int i=0; i<object.readingsBuffer.size(); i++) {
-            if(object.readingsBuffer.get(i).getReadingDateTimeMillis()>=millisFrom && object.readingsBuffer.get(i).getReadingDateTimeMillis()<= millisTo) {
-                objects.add(object.readingsBuffer.get(i));
-            }
-        }
 
         saveBtn = linearLayout.findViewById(R.id.saveBtn);
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                if(button == dateFrom) {
+                    fromDate.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getHour(), timePicker.getMinute());
+                    millisFrom = fromDate.getTimeInMillis();
+                }else{
+                    toDate.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getHour(), timePicker.getMinute());
+                    millisTo = toDate.getTimeInMillis();
+                }
+                objects.clear();
+                for(int i=0; i<object.readingsBuffer.size(); i++) {
+                    if(object.readingsBuffer.get(i).getReadingDateTimeMillis()>=millisFrom && object.readingsBuffer.get(i).getReadingDateTimeMillis()<= millisTo) {
+                        objects.add(object.readingsBuffer.get(i));
+                    }
+                }
+
+                if(isTimechanged == true) {
+                    setTime(timeText);
+                    isTimechanged = false;
+                }
+                if(isDatechanged == true) {
+                    setDate(dateText);
+                    isDatechanged = false;
+                }
+
+                adapter.notifyDataSetChanged();
                 builder.dismiss();
             }
         });
@@ -184,4 +187,32 @@ public class History extends AppCompatActivity {
 
     }
 
+    private void setDate(TextView dateText){
+
+        if(mDay<10 && mMonth<10){
+            dateText.setText("0"+mDay+"-"+"0"+mMonth+"-"+mYear);
+        }
+        else if(mDay<10){
+            dateText.setText("0"+mDay+"-"+mMonth+"-"+mYear);
+        }
+        else if(mMonth<10) {
+            dateText.setText(mDay + "-" + "0" + mMonth + "-" + mYear);
+        }
+        else {
+            dateText.setText(mDay + "-" + mMonth + "-" + mYear);
+        }
+    }
+
+
+    protected void setTime(TextView timeText) {
+
+        if (mHour < 10 && mMinute < 10) {
+            timeText.setText("0" + String.valueOf(mHour) + ":" + "0" + String.valueOf(mMinute));
+        } else if (mHour < 10) {
+            timeText.setText("0" + String.valueOf(mHour) + ":" + String.valueOf(mMinute));
+        } else if (mMinute < 10) {
+            timeText.setText(String.valueOf(mHour) + ":" + "0" + String.valueOf(mMinute));
+        } else
+            timeText.setText(String.valueOf(mHour) + ":" + String.valueOf(mMinute));
+    }
 }

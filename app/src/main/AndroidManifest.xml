@@ -13,7 +13,8 @@
         android:roundIcon="@drawable/medical_record_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.Thesis">
-        <activity android:name=".History"></activity>
+        <activity android:name=".Graphs"></activity>
+        <activity android:name=".History" />
         <activity android:name=".MainScreen" />
         <activity
             android:name=".BluetoothSettings"

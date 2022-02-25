@@ -77,23 +77,22 @@ public class MainScreen extends Activity {
 
         /*******TEST*******/
         if(testObject.isTest == true) {
-            Reading testObject = new Reading(70, 98, 120000);
+            Reading testObject = new Reading(70, 98, 1800000);
             readingsBuffer.add(testObject);
-            testObject = new Reading(78, 98, 17000);
+            testObject = new Reading(78, 98, 1700000);
             readingsBuffer.add(testObject);
-            testObject = new Reading(85, 95, 17200);
+            testObject = new Reading(85, 95, 1600000);
             readingsBuffer.add(testObject);
-            testObject = new Reading(70, 94, 17400);
+            testObject = new Reading(70, 94, 1440000);
             readingsBuffer.add(testObject);
-            testObject = new Reading(90, 99, 17800);
+            testObject = new Reading(90, 99, 1280000);
             readingsBuffer.add(testObject);
-            testObject = new Reading(86, 98, 18000);
+            testObject = new Reading(86, 98, 1000000);
             readingsBuffer.add(testObject);
 
             mTextView.setText("100 BPM");
             mTextView1.setText("97%");
         }
-
         /*******************/
 
         if(start == false){
@@ -111,7 +110,7 @@ public class MainScreen extends Activity {
         graphs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainScreen.this, History.class);
+                Intent intent = new Intent(MainScreen.this, Graphs.class);
                 startActivity(intent);
             }
         });
