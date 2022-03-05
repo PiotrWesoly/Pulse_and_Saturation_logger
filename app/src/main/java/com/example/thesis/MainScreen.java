@@ -92,7 +92,7 @@ public class MainScreen extends Activity {
 //            readingsBuffer.add(testObject);
 
             for(int i=0; i<15; i++) {
-                Reading testObject = new Reading(70+i, 50+2*i, 1800000-20000*i);
+                Reading testObject = new Reading(70+i, 50+2*i, 1800000-30000*i);
                 readingsBuffer.add(testObject);
             }
 

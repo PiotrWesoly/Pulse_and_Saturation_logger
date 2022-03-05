@@ -41,7 +41,7 @@ public class Graphs extends AppCompatActivity {
     ArrayList<String> xAxisValues;
     private ScatterChart chart;
     MainScreen object;
-    long substruct = 1640000000000L;
+    public long offset= 1640000000000l;
 
 
     @Override
@@ -112,7 +112,7 @@ public class Graphs extends AppCompatActivity {
 
         for (int i = 0; i <object.readingsBuffer.size(); i++) {
             float val = (float) object.readingsBuffer.get(i).getHeartRate();
-            values1.add(new Entry(object.readingsBuffer.get(i).getReadingDateTimeMillis()-substruct, val));
+            values1.add(new Entry(object.readingsBuffer.get(i).getReadingDateTimeMillis()-offset, val));
         }
 
         // create a dataset and give it a type
@@ -137,13 +137,14 @@ public class Graphs extends AppCompatActivity {
         @Override
         public String getFormattedValue(float value) {
 
-            for(int i=0; i<object.readingsBuffer.size(); i++) {
-                if (value == (float)(object.readingsBuffer.get(i).getReadingDateTimeMillis() - substruct)){
+            for(int i=0; i<object.readingsBuffer.size(); i++){
+                if(value == (float)object.readingsBuffer.get(i).getReadingDateTimeMillis()-offset)
+                {
                     return xAxisValues.get(i);
                 }
             }
-            return "g";
+
+            return "";
         }
     }
-
 }
