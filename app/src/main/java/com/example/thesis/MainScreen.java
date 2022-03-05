@@ -49,6 +49,7 @@ public class MainScreen extends Activity {
     public String strInput, strInput2, x;
     public static boolean start = false;
     int type =0;
+    static public int skip = 0;
 
     BluetoothSettings testObject = new BluetoothSettings();
 
@@ -77,18 +78,24 @@ public class MainScreen extends Activity {
 
         /*******TEST*******/
         if(testObject.isTest == true) {
-            Reading testObject = new Reading(70, 98, 1800000);
-            readingsBuffer.add(testObject);
-            testObject = new Reading(78, 98, 1700000);
-            readingsBuffer.add(testObject);
-            testObject = new Reading(85, 95, 1600000);
-            readingsBuffer.add(testObject);
-            testObject = new Reading(70, 94, 1440000);
-            readingsBuffer.add(testObject);
-            testObject = new Reading(90, 99, 1280000);
-            readingsBuffer.add(testObject);
-            testObject = new Reading(86, 98, 1000000);
-            readingsBuffer.add(testObject);
+//            Reading testObject = new Reading(70, 98, 1800000);
+//            readingsBuffer.add(testObject);
+//            testObject = new Reading(78, 98, 1700000);
+//            readingsBuffer.add(testObject);
+//            testObject = new Reading(85, 95, 1600000);
+//            readingsBuffer.add(testObject);
+//            testObject = new Reading(70, 94, 1440000);
+//            readingsBuffer.add(testObject);
+//            testObject = new Reading(90, 99, 1280000);
+//            readingsBuffer.add(testObject);
+//            testObject = new Reading(86, 98, 1000000);
+//            readingsBuffer.add(testObject);
+
+            for(int i=0; i<15; i++) {
+                Reading testObject = new Reading(70+i, 50+2*i, 1800000-20000*i);
+                readingsBuffer.add(testObject);
+            }
+
 
             mTextView.setText("100 BPM");
             mTextView1.setText("97%");
@@ -159,13 +166,18 @@ public class MainScreen extends Activity {
             try {
                 inputStream = mBTSocket.getInputStream();
                 while (!bStop) {
-                    byte[] buffer = new byte[256];
+                    byte[] buffer = new byte[1000000];
                     if (inputStream.available() > 0) {
                         inputStream.read(buffer);
                         int i = 0;
                         for (i = 0; i < buffer.length && buffer[i] != 0; i=i+7) {
                             object = new Reading(Byte.toUnsignedInt(buffer[i]), Byte.toUnsignedInt(buffer[i+1]), (((0xFF & buffer[i+2]) << 24) | ((0xFF & buffer[i+3]) << 16) | ((0xFF & buffer[i+4]) << 8) | (0xFF & buffer[i+5])));
-                            readingsBuffer.add(object);
+                            if(readingsBuffer.size() == 0)
+                            {
+                                readingsBuffer.add(object);
+                            }else if(readingsBuffer.size()!=0 && (object.getReadingDateTimeMillis()-readingsBuffer.get(readingsBuffer.size()-1).getReadingDateTimeMillis())>30000) {
+                                readingsBuffer.add(object);
+                            }
                             type = buffer[i+6];
                         }
                         strInput = new String(String.valueOf(Byte.toUnsignedInt(buffer[0]))+" bpm");

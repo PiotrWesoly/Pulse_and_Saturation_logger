@@ -20,22 +20,28 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.ScatterData;
 import com.github.mikephil.charting.data.ScatterDataSet;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IScatterDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.github.mikephil.charting.components.XAxis.XAxisPosition.BOTTOM;
 
 
 public class Graphs extends AppCompatActivity {
 
     static ArrayList<Reading> objects = new ArrayList<>();
-    List<String> xAxisValues;
+    ArrayList<String> xAxisValues;
     private ScatterChart chart;
-    private SeekBar seekBarX, seekBarY;
-    private TextView tvX, tvY;
     MainScreen object;
+    long substruct = 1640000000000L;
 
 
     @Override
@@ -46,42 +52,35 @@ public class Graphs extends AppCompatActivity {
         chart = (ScatterChart) findViewById(R.id.hrChart);
         object = new MainScreen();
 
-        xAxisValues = new ArrayList<>();
-        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm");
-
+        xAxisValues = new ArrayList<String>();
+        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd\nHH:mm");
 
         for(int i=0; i<object.readingsBuffer.size();i++){
 
             xAxisValues.add(formatter.format(object.readingsBuffer.get(i).getReadingDateTime()));
         }
 
-        MainScreen object;
-        object = new MainScreen();
 
-        setTitle("Graphs");
-
-//        chart = findViewById(R.id.chart1);
         chart.getDescription().setEnabled(false);
 //        chart.setOnChartValueSelectedListener(this);
 
         chart.setDrawGridBackground(false);
         chart.setTouchEnabled(true);
-        chart.setMaxHighlightDistance(50f);
+        chart.setMaxHighlightDistance(30f);
+        chart.setVisibleXRangeMaximum(10);
 
         // enable scaling and dragging
         chart.setDragEnabled(true);
         chart.setScaleEnabled(true);
+        chart.setExtraLeftOffset(15);
+        chart.setExtraRightOffset(15);
 
         chart.setMaxVisibleValueCount(200);
         chart.setPinchZoom(true);
 
         Legend l = chart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
-        l.setDrawInside(false);
-//        l.setTypeface(tfLight);
-        l.setXOffset(5f);
+        chart.getLegend().setEnabled(false);
+
 
         YAxis yl = chart.getAxisLeft();
 //        yl.setTypeface(tfLight);
@@ -90,42 +89,41 @@ public class Graphs extends AppCompatActivity {
         chart.getAxisRight().setEnabled(false);
 
         XAxis xl = chart.getXAxis();
+        xl.setGranularity(1f);
         xl.setCenterAxisLabels(true);
         xl.setEnabled(true);
         xl.setDrawGridLines(false);
-        xl.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xl.setPosition(BOTTOM);
 //        xl.setTypeface(tfLight);
-        xl.setDrawGridLines(false);
+        xl.setDrawGridLines(true);
 
-        chart.getXAxis().setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(xAxisValues));
-        setData(5);
+        xl.setPosition(BOTTOM);
+        xl.setAxisLineColor(Color.BLUE);
+
+        setData();
+
+        chart.getXAxis().setValueFormatter(new MyAxisFormatter());
+        chart.getXAxis().setLabelRotationAngle(45);
     }
 
 
-    public void setData( int numberOfRec) {
-
-
+    public void setData( ) {
         ArrayList<Entry> values1 = new ArrayList<>();
 
-
-        for (int i = object.readingsBuffer.size()-1-numberOfRec; i <object.readingsBuffer.size(); i++) {
+        for (int i = 0; i <object.readingsBuffer.size(); i++) {
             float val = (float) object.readingsBuffer.get(i).getHeartRate();
-            values1.add(new Entry(object.readingsBuffer.get(i).getReadingDateTimeMillis(), val));
+            values1.add(new Entry(object.readingsBuffer.get(i).getReadingDateTimeMillis()-substruct, val));
         }
-
 
         // create a dataset and give it a type
         ScatterDataSet set1 = new ScatterDataSet(values1, "HR");
-        set1.setScatterShape(ScatterChart.ScatterShape.SQUARE);
+        set1.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
         set1.setColor(ColorTemplate.COLORFUL_COLORS[0]);
-
 
         set1.setScatterShapeSize(12f);
 
-
         ArrayList<IScatterDataSet> dataSets = new ArrayList<>();
         dataSets.add(set1); // add the data sets
-
 
         // create a data object with the data sets
         ScatterData data = new ScatterData(dataSets);
@@ -135,5 +133,17 @@ public class Graphs extends AppCompatActivity {
         chart.invalidate();
     }
 
+    private class MyAxisFormatter extends ValueFormatter {
+        @Override
+        public String getFormattedValue(float value) {
+
+            for(int i=0; i<object.readingsBuffer.size(); i++) {
+                if (value == (float)(object.readingsBuffer.get(i).getReadingDateTimeMillis() - substruct)){
+                    return xAxisValues.get(i);
+                }
+            }
+            return "g";
+        }
+    }
 
 }
