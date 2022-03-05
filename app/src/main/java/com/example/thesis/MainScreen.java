@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -18,8 +19,12 @@ import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,7 +52,7 @@ public class MainScreen extends Activity {
     private ProgressDialog progressDialog;
     TextView mTextView, mTextView1, startText;
     public String strInput, strInput2, x;
-    public static boolean start = false;
+    public static boolean start = true;
     int type =0;
     static public int skip = 0;
 
@@ -67,6 +72,8 @@ public class MainScreen extends Activity {
         history = (CardView) findViewById(R.id.history);
         graphs = (CardView) findViewById(R.id.graph);
         startBtn = (CardView) findViewById(R.id.start);
+
+        loadData();
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -101,6 +108,7 @@ public class MainScreen extends Activity {
             mTextView1.setText("97%");
         }
         /*******************/
+
 
         if(start == false){
             startText.setText("Start");
@@ -137,8 +145,8 @@ public class MainScreen extends Activity {
                     start = true;
                 }else{
                     startText.setText("Start");
-                    onPause();
                     start = false;
+                    onPause();
                 }
             }
         });
@@ -243,7 +251,9 @@ public class MainScreen extends Activity {
     @Override
     protected void onPause() {
         if (mBTSocket != null && mIsBluetoothConnected) {
-            new DisConnectBT().execute();
+            if(start != true) {
+                new DisConnectBT().execute();
+            }
         }
         Log.d(TAG, "Paused");
         super.onPause();
@@ -260,6 +270,7 @@ public class MainScreen extends Activity {
     @Override
     protected void onStop() {
         Log.d(TAG, "Stopped");
+        saveData();
         super.onStop();
     }
     @Override
@@ -309,4 +320,61 @@ public class MainScreen extends Activity {
     protected void onDestroy() {
         super.onDestroy();
     }
+
+    private void saveData() {
+        // method for saving the data in array list.
+        // creating a variable for storing data in
+        // shared preferences.
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+
+        // creating a variable for editor to
+        // store data in shared preferences.
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        // creating a new variable for gson.
+        Gson gson = new Gson();
+
+        // getting data from gson and storing it in a string.
+        String json = gson.toJson(readingsBuffer);
+
+        // below line is to save data in shared
+        // prefs in the form of string.
+        editor.putString("readings", json);
+
+        // below line is to apply changes
+        // and save data in shared prefs.
+        editor.apply();
+
+        // after saving data we are displaying a toast message.
+        Toast.makeText(this, "Saved Array List to Shared preferences. ", Toast.LENGTH_SHORT).show();
+    }
+
+    private void loadData() {
+        // method to load arraylist from shared prefs
+        // initializing our shared prefs with name as
+        // shared preferences.
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+
+        // creating a variable for gson.
+        Gson gson = new Gson();
+
+        // below line is to get to string present from our
+        // shared prefs if not present setting it as null.
+        String json = sharedPreferences.getString("readings", null);
+
+        // below line is to get the type of our array list.
+        Type type = new TypeToken<ArrayList<Reading>>() {}.getType();
+
+        // in below line we are getting data from gson
+        // and saving it to our array list
+        readingsBuffer = gson.fromJson(json, type);
+
+        // checking below if the array list is empty or not
+        if (readingsBuffer == null) {
+            // if the array list is empty
+            // creating a new array list.
+            readingsBuffer = new ArrayList<>();
+        }
+    }
+
 }
