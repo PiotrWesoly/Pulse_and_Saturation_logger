@@ -146,6 +146,12 @@ public class MainScreen extends Activity {
                 }else{
                     startText.setText("Start");
                     start = false;
+                    String text = "2";
+                    try {
+                        mBTSocket.getOutputStream().write(text.getBytes());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     onPause();
                 }
             }
@@ -271,6 +277,12 @@ public class MainScreen extends Activity {
     protected void onStop() {
         Log.d(TAG, "Stopped");
         saveData();
+        String text = "2";
+        try {
+            mBTSocket.getOutputStream().write(text.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         super.onStop();
     }
     @Override
@@ -300,7 +312,7 @@ public class MainScreen extends Activity {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             if (!mConnectSuccessful) {
-                Toast.makeText(getApplicationContext(), "Could not connect to device.Please turn on your Hardware", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Could not connect to device.Please turn on your sensor", Toast.LENGTH_LONG).show();
                 finish();
             } else {
                 msg("Connected to device");
