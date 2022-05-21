@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class MainScreen extends Activity {
-    private static final String TAG = "BlueTest5-Controlling";
+    private static final String TAG = "Logger-dbg";
     private int mMaxChars = 50000;//Default//change this to string..........
     private UUID mDeviceUUID;
     public BluetoothSocket mBTSocket;
@@ -44,6 +44,7 @@ public class MainScreen extends Activity {
 
     private static final byte CURRENT_READING_MSG = 1;
     private static final byte HISTORY_MSG = 2;
+    private static final int MINUTE = 60000;
 
     public static List<Reading> readingsBuffer = new ArrayList<>();
     Reading object;
@@ -73,7 +74,7 @@ public class MainScreen extends Activity {
         graphs = (CardView) findViewById(R.id.graph);
         startBtn = (CardView) findViewById(R.id.start);
 
-        loadData();
+//        loadData();
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -99,7 +100,7 @@ public class MainScreen extends Activity {
 //            readingsBuffer.add(testObject);
 
             for(int i=0; i<15; i++) {
-                Reading testObject = new Reading(70+i, 50+2*i, 1800000-30000*i);
+                Reading testObject = new Reading(70+i, 95+(i%2), 1800000-65000*i);
                 readingsBuffer.add(testObject);
             }
 
@@ -189,7 +190,7 @@ public class MainScreen extends Activity {
                             if(readingsBuffer.size() == 0)
                             {
                                 readingsBuffer.add(object);
-                            }else if(readingsBuffer.size()!=0 && (object.getReadingDateTimeMillis()-readingsBuffer.get(readingsBuffer.size()-1).getReadingDateTimeMillis())>30000) {
+                            }else if(readingsBuffer.size()!=0 && (object.getReadingDateTimeMillis()-readingsBuffer.get(readingsBuffer.size()-1).getReadingDateTimeMillis())>(MINUTE)) {
                                 readingsBuffer.add(object);
                             }
                             type = buffer[i+6];
@@ -270,18 +271,29 @@ public class MainScreen extends Activity {
             if(testObject.isTest == false)
             new ConnectBT().execute();
         }
+        else
+        {
+            String text = "1";
+            try {
+                mBTSocket.getOutputStream().write(text.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         Log.d(TAG, "Resumed");
         super.onResume();
     }
     @Override
     protected void onStop() {
         Log.d(TAG, "Stopped");
-        saveData();
+//        saveData();
         String text = "2";
-        try {
-            mBTSocket.getOutputStream().write(text.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(testObject.isTest == false) {
+            try {
+                mBTSocket.getOutputStream().write(text.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         super.onStop();
     }
@@ -332,6 +344,7 @@ public class MainScreen extends Activity {
     protected void onDestroy() {
         super.onDestroy();
     }
+
 
     private void saveData() {
         // method for saving the data in array list.

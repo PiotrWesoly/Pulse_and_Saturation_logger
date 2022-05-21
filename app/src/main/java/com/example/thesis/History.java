@@ -75,6 +75,10 @@ public class History extends AppCompatActivity {
         });
 
         for(int i=0; i<object.readingsBuffer.size(); i++) {
+            if(objects.contains(object.readingsBuffer.get(i)) == true)
+            {
+                continue;
+            }
             objects.add(object.readingsBuffer.get(i));
         }
 

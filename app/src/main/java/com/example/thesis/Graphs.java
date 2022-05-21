@@ -41,7 +41,7 @@ public class Graphs extends AppCompatActivity {
     ArrayList<String> xAxisValues;
     private ScatterChart chart;
     MainScreen object;
-    public long offset= 1640000000000l;
+//    public long offset= 1640000000000l;
 
 
     @Override
@@ -85,6 +85,7 @@ public class Graphs extends AppCompatActivity {
         YAxis yl = chart.getAxisLeft();
 //        yl.setTypeface(tfLight);
         yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        yl.setAxisMaximum(150f);
 
         chart.getAxisRight().setEnabled(false);
 
@@ -92,12 +93,8 @@ public class Graphs extends AppCompatActivity {
         xl.setGranularity(1f);
         xl.setCenterAxisLabels(true);
         xl.setEnabled(true);
-        xl.setDrawGridLines(false);
         xl.setPosition(BOTTOM);
-//        xl.setTypeface(tfLight);
         xl.setDrawGridLines(true);
-
-        xl.setPosition(BOTTOM);
         xl.setAxisLineColor(Color.BLUE);
 
         setData();
@@ -112,7 +109,7 @@ public class Graphs extends AppCompatActivity {
 
         for (int i = 0; i <object.readingsBuffer.size(); i++) {
             float val = (float) object.readingsBuffer.get(i).getHeartRate();
-            values1.add(new Entry(object.readingsBuffer.get(i).getReadingDateTimeMillis()-offset, val));
+            values1.add(new Entry(object.readingsBuffer.get(i).getReadingDateTimeMillis()/*-offset*/, val));
         }
 
         // create a dataset and give it a type
@@ -138,7 +135,7 @@ public class Graphs extends AppCompatActivity {
         public String getFormattedValue(float value) {
 
             for(int i=0; i<object.readingsBuffer.size(); i++){
-                if(value == (float)object.readingsBuffer.get(i).getReadingDateTimeMillis()-offset)
+                if(value == (float)object.readingsBuffer.get(i).getReadingDateTimeMillis()/*-offset*/)
                 {
                     return xAxisValues.get(i);
                 }
