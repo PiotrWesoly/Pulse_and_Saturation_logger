@@ -183,10 +183,14 @@ public class MainScreen extends Activity {
                 while (!bStop) {
                     byte[] buffer = new byte[1000000];
                     if (inputStream.available() > 0) {
+
                         inputStream.read(buffer);
-                        int i = 0;
-                        for (i = 0; i < buffer.length && buffer[i] != 0; i=i+7) {
-                            object = new Reading(Byte.toUnsignedInt(buffer[i]), Byte.toUnsignedInt(buffer[i+1]), (((0xFF & buffer[i+2]) << 24) | ((0xFF & buffer[i+3]) << 16) | ((0xFF & buffer[i+4]) << 8) | (0xFF & buffer[i+5])));
+
+                        for (int i = 0; i < buffer.length && buffer[i] != 0; i=i+7) {
+
+                            object = new Reading(Byte.toUnsignedInt(buffer[i]), Byte.toUnsignedInt(buffer[i+1]), (((0xFF & buffer[i+2]) << 24) |
+                                    ((0xFF & buffer[i+3]) << 16) | ((0xFF & buffer[i+4]) << 8) | (0xFF & buffer[i+5])));
+
                             if(readingsBuffer.size() == 0)
                             {
                                 readingsBuffer.add(object);
@@ -223,6 +227,8 @@ public class MainScreen extends Activity {
             bStop = true;
         }
     }
+
+
     private class DisConnectBT extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
@@ -265,6 +271,7 @@ public class MainScreen extends Activity {
         Log.d(TAG, "Paused");
         super.onPause();
     }
+
     @Override
     protected void onResume() {
         if (mBTSocket == null || !mIsBluetoothConnected) {
@@ -273,7 +280,7 @@ public class MainScreen extends Activity {
         }
         else
         {
-            String text = "1";
+            String text = "2";
             try {
                 mBTSocket.getOutputStream().write(text.getBytes());
             } catch (IOException e) {
@@ -283,10 +290,11 @@ public class MainScreen extends Activity {
         Log.d(TAG, "Resumed");
         super.onResume();
     }
+
     @Override
     protected void onStop() {
         Log.d(TAG, "Stopped");
-//        saveData();
+        saveData();
         String text = "2";
         if(testObject.isTest == false) {
             try {
@@ -297,15 +305,17 @@ public class MainScreen extends Activity {
         }
         super.onStop();
     }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
+
     private class ConnectBT extends AsyncTask<Void, Void, Void> {
         private boolean mConnectSuccessful = true;
         @Override
         protected void onPreExecute() {
-            progressDialog = ProgressDialog.show(MainScreen.this, "Hold on", "Connecting");// http://stackoverflow.com/a/11130220/1287554
+            progressDialog = ProgressDialog.show(MainScreen.this, "Hold on", "Connecting");
         }
         @Override
         protected Void doInBackground(Void... devices) {
@@ -320,6 +330,7 @@ public class MainScreen extends Activity {
             }
             return null;
         }
+
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
@@ -335,11 +346,12 @@ public class MainScreen extends Activity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                mReadThread = new ReadInput(); // Kick off input reader
+                mReadThread = new ReadInput();
             }
             progressDialog.dismiss();
         }
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

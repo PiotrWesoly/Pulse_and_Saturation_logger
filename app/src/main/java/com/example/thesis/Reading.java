@@ -21,7 +21,6 @@ public class Reading {
         this.heartRate = hr;
         this.spO2 = spO2;
         this.sampleMilis = sampleMilis;
-        convertReadingTime(sampleMilis);
         this.readingDateTime = convertReadingTime(sampleMilis);
     }
 
