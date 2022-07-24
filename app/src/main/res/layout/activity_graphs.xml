@@ -13,11 +13,11 @@
         android:orientation="vertical">
         <RelativeLayout
             android:layout_width="600dp"
-            android:layout_height="210dp">
+            android:layout_height="80dp">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="430dp"
-                android:layout_height="140dp"
+                android:layout_height="100dp"
                 app:cardCornerRadius="60dp"
                 android:layout_marginTop="-30dp"
                 android:layout_marginLeft="-10dp"
@@ -28,20 +28,70 @@
                 android:id="@+id/history">
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_marginTop="60dp"
-                    android:gravity="center"
+                    android:layout_height="50dp"
+                    android:layout_marginHorizontal="15dp"
+                    android:layout_marginTop="50dp"
+                    android:textAlignment="center"
+                    android:fontFamily="sans-serif-condensed-medium"
                     android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:text="GRAPHS"/>
+                    android:textSize="25dp"
+                    android:text="Graphs"/>
             </androidx.cardview.widget.CardView>
         </RelativeLayout>
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/hrChart"
-            android:layout_marginTop="40dp"
-            android:layout_width="match_parent"
-            android:layout_height="300dp" />
+        <androidx.cardview.widget.CardView
+            android:layout_width="400dp"
+            android:layout_height="200dp"
+            app:cardCornerRadius="60dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="-0dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginHorizontal="5dp"
+            app:cardBackgroundColor="@color/white"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="380dp"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginTop="5dp"
+                android:textAlignment="center"
+                android:fontFamily="sans-serif-thin"
+                android:textColor="@color/black"
+                android:textSize="25dp"
+                android:text="Heart Rate"/>
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/hrChart"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="300dp" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="400dp"
+            android:layout_height="200dp"
+            app:cardCornerRadius="60dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="-0dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginHorizontal="5dp"
+            app:cardBackgroundColor="@color/white"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="380dp"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginTop="5dp"
+                android:textAlignment="center"
+                android:fontFamily="sans-serif-thin"
+                android:textColor="@color/black"
+                android:textSize="25dp"
+                android:text="Blood Saturation"/>
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/spo2Chart"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="300dp" />
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 

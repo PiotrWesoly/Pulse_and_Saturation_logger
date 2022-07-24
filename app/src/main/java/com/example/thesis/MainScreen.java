@@ -2,6 +2,8 @@ package com.example.thesis;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -11,6 +13,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
+import androidx.core.app.NotificationCompat;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -30,10 +34,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 public class MainScreen extends Activity {
     private static final String TAG = "Logger-dbg";
+    private static final String CHANNEL_ID = "1";
     private int mMaxChars = 50000;//Default//change this to string..........
     private UUID mDeviceUUID;
     public BluetoothSocket mBTSocket;
@@ -55,7 +61,7 @@ public class MainScreen extends Activity {
     public String strInput, strInput2, x;
     public static boolean start = true;
     int type =0;
-    static public int skip = 0;
+    static public boolean wasNotified = false;
 
     BluetoothSettings testObject = new BluetoothSettings();
 
@@ -75,6 +81,7 @@ public class MainScreen extends Activity {
         startBtn = (CardView) findViewById(R.id.start);
 
 //        loadData();
+        pushNotification(140);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -86,22 +93,34 @@ public class MainScreen extends Activity {
 
         /*******TEST*******/
         if(testObject.isTest == true) {
-//            Reading testObject = new Reading(70, 98, 1800000);
-//            readingsBuffer.add(testObject);
-//            testObject = new Reading(78, 98, 1700000);
-//            readingsBuffer.add(testObject);
-//            testObject = new Reading(85, 95, 1600000);
-//            readingsBuffer.add(testObject);
-//            testObject = new Reading(70, 94, 1440000);
-//            readingsBuffer.add(testObject);
-//            testObject = new Reading(90, 99, 1280000);
-//            readingsBuffer.add(testObject);
-//            testObject = new Reading(86, 98, 1000000);
-//            readingsBuffer.add(testObject);
 
-            for(int i=0; i<15; i++) {
-                Reading testObject = new Reading(70+i, 95+(i%2), 1800000-65000*i);
-                readingsBuffer.add(testObject);
+            int minHR = 75;
+            int maxHR = 79;
+            int minSpo2 = 97;
+            int maxSpo2 = 99;
+            int random_hr = 73;
+            int random_spo2 = 98;
+            int random_interval = (int)Math.floor(Math.random()*(10-5+1)+5);
+
+            //Generate random int value from 50 to 10
+
+
+            for(int i=0; i<1400; i++) {
+                random_interval = (int)Math.floor(Math.random()*(10-5+1)+5);
+                if(i%random_interval==0)
+                {
+                random_hr = (int)Math.floor(Math.random()*(maxHR-minHR+1)+minHR);
+                random_spo2 = (int)Math.floor(Math.random()*(maxSpo2-minSpo2+1)+minSpo2);
+                }
+                if(i > 1200 && i<1400)
+                {
+                    Reading testObject = new Reading(random_hr+25, random_spo2, 1800000-65000*i);
+                    readingsBuffer.add(testObject);
+                }
+                else {
+                    Reading testObject = new Reading(random_hr, random_spo2, 1800000 - 65000 * i);
+                    readingsBuffer.add(testObject);
+                }
             }
 
 
@@ -191,16 +210,22 @@ public class MainScreen extends Activity {
                             object = new Reading(Byte.toUnsignedInt(buffer[i]), Byte.toUnsignedInt(buffer[i+1]), (((0xFF & buffer[i+2]) << 24) |
                                     ((0xFF & buffer[i+3]) << 16) | ((0xFF & buffer[i+4]) << 8) | (0xFF & buffer[i+5])));
 
+                            if(object.getHeartRate() > 140 && wasNotified == false)
+                            {
+                                pushNotification(object.getHeartRate());
+                                wasNotified = true;
+                            }
+
                             if(readingsBuffer.size() == 0)
                             {
                                 readingsBuffer.add(object);
-                            }else if(readingsBuffer.size()!=0 && (object.getReadingDateTimeMillis()-readingsBuffer.get(readingsBuffer.size()-1).getReadingDateTimeMillis())>(MINUTE)) {
+                            }else if(readingsBuffer.size()!=0 && (object.getReadingDateTimeMillis()-readingsBuffer.get(readingsBuffer.size()-1).getReadingDateTimeMillis())>(MINUTE/2)) {
                                 readingsBuffer.add(object);
                             }
                             type = buffer[i+6];
                         }
-                        strInput = new String(String.valueOf(Byte.toUnsignedInt(buffer[0]))+" bpm");
-                        strInput2 = new String(String.valueOf(Byte.toUnsignedInt(buffer[1]))+" %");
+                        strInput = String.valueOf(Byte.toUnsignedInt(buffer[0]))+" bpm";
+                        strInput2 = String.valueOf(Byte.toUnsignedInt(buffer[1]))+" %";
 
                         Log.d(TAG, "run: " + strInput);
 
@@ -261,6 +286,7 @@ public class MainScreen extends Activity {
     private void msg(String s) {
         Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
     }
+
     @Override
     protected void onPause() {
         if (mBTSocket != null && mIsBluetoothConnected) {
@@ -274,19 +300,19 @@ public class MainScreen extends Activity {
 
     @Override
     protected void onResume() {
-        if (mBTSocket == null || !mIsBluetoothConnected) {
+//        if (mBTSocket == null || !mIsBluetoothConnected) {
             if(testObject.isTest == false)
-            new ConnectBT().execute();
-        }
-        else
-        {
-            String text = "2";
-            try {
-                mBTSocket.getOutputStream().write(text.getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+                new ConnectBT().execute();
+//        }
+//        else
+//        {
+//            String text = "2";
+//            try {
+//                mBTSocket.getOutputStream().write(text.getBytes());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
         Log.d(TAG, "Resumed");
         super.onResume();
     }
@@ -294,7 +320,7 @@ public class MainScreen extends Activity {
     @Override
     protected void onStop() {
         Log.d(TAG, "Stopped");
-        saveData();
+//        saveData();
         String text = "2";
         if(testObject.isTest == false) {
             try {
@@ -357,7 +383,6 @@ public class MainScreen extends Activity {
         super.onDestroy();
     }
 
-
     private void saveData() {
         // method for saving the data in array list.
         // creating a variable for storing data in
@@ -411,6 +436,27 @@ public class MainScreen extends Activity {
             // if the array list is empty
             // creating a new array list.
             readingsBuffer = new ArrayList<>();
+        }
+    }
+
+    public void pushNotification( int value) {
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.watch_icon)
+                .setContentTitle("Pulse and Saturation logger")
+                .setContentText("Your pulse is dangerously high, value: "+value + "bmp")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "notification";
+            String description = "Notify user";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+            notificationManager.notify(1, builder.build());
         }
     }
 
