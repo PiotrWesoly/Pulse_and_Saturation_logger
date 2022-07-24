@@ -1,10 +1,12 @@
 package com.example.thesis;
 
 import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -37,10 +39,15 @@ public class CustomAdapter extends ArrayAdapter<Reading> {
         TextView tvName = (TextView) convertView.findViewById(R.id.textDate);
         TextView tvHome = (TextView) convertView.findViewById(R.id.textHR);
         TextView tvSpo2 = (TextView) convertView.findViewById(R.id.textSP);
+        ImageView tvImage = (ImageView) convertView.findViewById(R.id.warning);
         // Populate the data into the template view using the data object
         tvName.setText(formatter.format(object.getReadingDateTime()));
         tvHome.setText(String.valueOf(object.getHeartRate()) + " BPM");
         tvSpo2.setText(String.valueOf(object.getSpO2()) + "%");
+        if(object.getHeartRate()>100)
+        {
+            tvImage.setImageResource(R.drawable.warning_foreground);
+        }
 
         // Return the completed view to render on screen
         return convertView;
