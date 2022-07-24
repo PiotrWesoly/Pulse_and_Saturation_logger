@@ -2,7 +2,7 @@
 
 ScreenShots from the application
 
-![alt text](https://github.com/PiotrWesoly/Pulse_and_Saturation_logger/blob/master/Screenshot_20220521-130622_Pusle%20and%20Saturation%20logger.jpg?raw=true)
+![alt text](https://github.com/PiotrWesoly/Pulse_and_Saturation_logger/blob/master/Screenshot_20220521-130622_Pusle%20and%20Saturation%20logger.jpg?raw=true width=200)
 
 ![alt text](https://github.com/PiotrWesoly/Pulse_and_Saturation_logger/blob/master/Screenshot_20220522-093040_Pusle%20and%20Saturation%20logger.jpg?raw=true)
 
