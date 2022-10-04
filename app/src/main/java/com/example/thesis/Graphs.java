@@ -46,6 +46,8 @@ public class Graphs extends AppCompatActivity {
 
         setData(chartHR);
         setData(chartSpo2);
+//        chartHR.setVisibleXRangeMaximum(10f);
+//        chartSpo2.setVisibleXRangeMaximum(10f);
 
     }
 
@@ -54,7 +56,7 @@ public class Graphs extends AppCompatActivity {
         chart.getDescription().setEnabled(false);
         chart.setDrawGridBackground(false);
         chart.setTouchEnabled(true);
-        chart.setMaxHighlightDistance(30f);
+//        chart.setMaxHighlightDistance(30f);
 
         // enable scaling and dragging
         chart.setDragEnabled(true);
@@ -65,8 +67,8 @@ public class Graphs extends AppCompatActivity {
         chart.setMaxVisibleValueCount(10);
         chart.setPinchZoom(true);
         chart.getLegend().setEnabled(false);
-        chart.setVisibleXRange(5,100);
-        chart.moveViewToX(10);
+//        chart.setVisibleXRange(5,20);
+//        chart.moveViewToX(10);
 
         YAxis yl = chart.getAxisLeft();
         yl.setAxisMinimum(10f); // this replaces setStartAtZero(true)
@@ -79,12 +81,16 @@ public class Graphs extends AppCompatActivity {
         chartHR.getAxisLeft().setAxisMaximum(150);
 
         chart.getAxisRight().setEnabled(false);
+        chart.getXAxis().setLabelCount(5, true);
+
 
         XAxis xl = chart.getXAxis();
 //        xl.setCenterAxisLabels(false);
         xl.setEnabled(true);
         xl.setDrawLabels(true);
 //        xl.setLabelCount(20, true);
+        xl.setSpaceMin(10f);
+        xl.setGranularity(1f);
 
         xl.setPosition(BOTTOM);
         xl.setDrawGridLines(true);
@@ -93,6 +99,7 @@ public class Graphs extends AppCompatActivity {
         xl.setValueFormatter(new MyAxisFormatter());
         xl.setLabelRotationAngle(45);
         xl.setTextSize(10f);
+//        xl.setLabelCount(5, true);
     }
 
     private void addDate() {
@@ -160,8 +167,8 @@ public class Graphs extends AppCompatActivity {
         chart.setData(data);
         chart.invalidate();
 
-        chart.setVisibleXRange(1000f,3000f);
-        chart.moveViewToX(chart.getXChartMax());
+        chart.setVisibleXRange(10f,300f);
+//        chart.moveViewToX(chart.getXChartMax());
     }
 
 

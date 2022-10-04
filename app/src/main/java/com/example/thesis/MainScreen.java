@@ -219,7 +219,7 @@ public class MainScreen extends Activity {
                             if(readingsBuffer.size() == 0)
                             {
                                 readingsBuffer.add(object);
-                            }else if(readingsBuffer.size()!=0 && (object.getReadingDateTimeMillis()-readingsBuffer.get(readingsBuffer.size()-1).getReadingDateTimeMillis())>(MINUTE/2)) {
+                            }else if(readingsBuffer.size()!=0 && (object.getReadingDateTimeMillis()-readingsBuffer.get(readingsBuffer.size()-1).getReadingDateTimeMillis())>(MINUTE/12)) {
                                 readingsBuffer.add(object);
                             }
                             type = buffer[i+6];
